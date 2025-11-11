@@ -1,4 +1,4 @@
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSUWb-OB9nCHoMhWE0-URH3Ozz1YBpIZ24wCjkZcTvqcR9Fo5ue2fus9xO7AbWKWy8c_1loaRYVZYl9/pubhtml";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSUWb-OB9nCHoMhWE0-URH3Ozz1YBpIZ24wCjkZcTvqcR9Fo5ue2fus9xO7AbWKWy8c_1loaRYVZYl9/pub?gid=0&single=true&output=csv";
 
 function parseDate(d){if(!d)return null;const t=Date.parse(d);return isNaN(t)?null:new Date(t);}
 function daysUntil(date){if(!date)return null;return Math.ceil((date.getTime()-Date.now())/86400000);}
