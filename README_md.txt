@@ -1,6 +1,3 @@
------ README.md -----
-(請將此內容複製成 README.md)
-----------------------------------
 # 免費版優惠券網站（GitHub Pages + Google Sheets）
 
 ## 使用步驟
