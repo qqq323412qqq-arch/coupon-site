@@ -1,0 +1,33 @@
+----- script.js -----
+(請將此內容複製成 script.js)
+----------------------------------
+const CSV_URL = "YOUR_GOOGLE_SHEETS_PUBLISHED_CSV_URL";
+
+function parseDate(d){if(!d)return null;const t=Date.parse(d);return isNaN(t)?null:new Date(t);}
+function daysUntil(date){if(!date)return null;return Math.ceil((date.getTime()-Date.now())/86400000);}
+function unique(a){return[...new Set(a)];}
+
+function renderList(rows){
+  const list=document.getElementById('list');list.innerHTML="";
+  if(!rows.length){list.innerHTML='<div class="text-center text-muted py-5">沒有符合條件的優惠券</div>';return;}
+  rows.forEach(r=>{
+    const col=document.createElement('div');col.className='col-12 col-md-6 col-lg-4';
+    const card=document.createElement('div');card.className='card card-coupon h-100 shadow-sm';
+    const body=document.createElement('div');body.className='card-body d-flex flex-column';
+    body.innerHTML=`<h3 class="h6 mb-1">${r.Store||'(未命名)'}</h3>
+    <div class="small text-muted mb-2">${[r.Category,r.City].filter(Boolean).join(' · ')}</div>
+    <p class="line-clamp-2 mb-2">${r.CouponTitle||r.Discount||''}</p>`;
+    const btns=document.createElement('div');btns.className='mt-auto d-flex gap-2';
+    if(r.Code){const b=document.createElement('button');b.className='btn btn-sm btn-outline-dark';b.textContent=`代碼：${r.Code}`;b.onclick=()=>navigator.clipboard.writeText(r.Code);btns.appendChild(b);}
+    if(r.Link){const a=document.createElement('a');a.className='btn btn-sm btn-primary';a.href=r.Link;a.target="_blank";a.textContent='前往使用';btns.appendChild(a);}
+    body.appendChild(btns);card.appendChild(body);col.appendChild(card);list.appendChild(col);
+  });
+}
+
+async function loadCSV(){
+  if(!CSV_URL.includes('http')){document.getElementById('list').innerHTML='<div class="text-center text-danger py-5">請在 script.js 填入你的 Google 試算表 CSV 連結。</div>';return;}
+  const res=await fetch(CSV_URL);const text=await res.text();const data=Papa.parse(text,{header:true,skipEmptyLines:true}).data;
+  window.rows=data;renderList(data);
+}
+loadCSV();
+document.addEventListener('input',()=>window.rows&&renderList(window.rows));
